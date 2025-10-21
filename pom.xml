@@ -62,6 +62,18 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<!-- OpenAPI / Swagger -->
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-api</artifactId>
+			<version>2.8.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.springdoc</groupId>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+			<version>2.8.13</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -89,6 +101,34 @@
 						</exclude>
 					</excludes>
 				</configuration>
+				<!-- executions required for OpenAPI generation -->
+				<executions>
+					<execution>
+						<goals>
+							<goal>start</goal>
+							<goal>stop</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.springdoc</groupId>
+				<artifactId>springdoc-openapi-maven-plugin</artifactId>
+				<version>1.4</version>
+				<configuration>
+					<!--					<apiDocsUrl>http://localhost:8080/v3/api-docs</apiDocsUrl>-->
+					<!--					<outputFileName>openapi.json</outputFileName>-->
+					<outputDir>../</outputDir>
+					<skip>false</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>integration-test</id>
+						<goals>
+							<goal>generate</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

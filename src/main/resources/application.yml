@@ -1,0 +1,17 @@
+# Spring configuration
+spring:
+  datasource:
+    url: "jdbc:h2:mem:testdb"
+    driverClassName: "org.h2.Driver"
+    username: "sa"
+    password: "password"
+  jpa:
+    database-platform: "org.hibernate.dialect.H2Dialect"
+    #defer-datasource-initialization: true
+    open-in-view: false
+    hibernate:
+      dll-auto: create
+    show-sql: true
+  h2:
+    console:
+      enabled: true
