@@ -1,0 +1,11 @@
+Alternative 1: Controller-spezifisch
+
+@CrossOrigin(origins = "http://localhost:4200")
+
+Alternative 2: Anwendungseigenschaft (application.yml)
+
+# application.properties
+spring.web.cors.allowed-origins=http://localhost:4200
+spring.web.cors.allowed-methods=GET,POST,PUT,PATCH,DELETE,OPTIONS
+spring.web.cors.allowed-headers=*
+spring.web.cors.allow-credentials=true

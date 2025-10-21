@@ -10,7 +10,7 @@ spring:
     #defer-datasource-initialization: true
     open-in-view: false
     hibernate:
-      dll-auto: create
+      ddl-auto: create
     show-sql: true
   h2:
     console:
