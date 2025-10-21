@@ -25,25 +25,8 @@ public class TodoService {
         return repository.findById(id);
     }
 
-    public Todo create(Todo todo) {
-        todo.setId(null);
-        todo.setCreated(OffsetDateTime.now());
-        todo.setLastModified(OffsetDateTime.now());
-        if (todo.getStatus() == null) {
-            todo.setStatus(TodoStatus.OPEN);
-        }
+    public Todo save(Todo todo) {
         return repository.save(todo);
-    }
-
-    public Optional<Todo> update(UUID id, Todo updated) {
-        return repository.findById(id).map(existing -> {
-            existing.setName(updated.getName());
-            existing.setDueDate(updated.getDueDate());
-            existing.setDetails(updated.getDetails());
-            existing.setStatus(updated.getStatus());
-            existing.setLastModified(OffsetDateTime.now());
-            return repository.save(existing);
-        });
     }
 
     public void delete(UUID id) {
