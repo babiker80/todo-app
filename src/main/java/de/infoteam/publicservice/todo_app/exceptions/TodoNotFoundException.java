@@ -9,6 +9,10 @@ public class TodoNotFoundException extends RuntimeException {
         super("Todo not found: " + id);
         this.id = id;
     }
+    public TodoNotFoundException(String message, UUID id) {
+        super(message +": " + id);
+        this.id = id;
+    }
 
     public UUID getId() {
         return id;

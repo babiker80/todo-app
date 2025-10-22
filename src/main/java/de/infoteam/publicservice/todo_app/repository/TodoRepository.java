@@ -1,6 +1,6 @@
 package de.infoteam.publicservice.todo_app.repository;
 
-import de.infoteam.publicservice.todo_app.entity.Todo;
+import de.infoteam.publicservice.todo_app.model.Todo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

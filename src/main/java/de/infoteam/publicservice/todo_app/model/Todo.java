@@ -1,6 +1,5 @@
-package de.infoteam.publicservice.todo_app.entity;
+package de.infoteam.publicservice.todo_app.model;
 
-import de.infoteam.publicservice.todo_app.model.TodoStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.GenericGenerator;

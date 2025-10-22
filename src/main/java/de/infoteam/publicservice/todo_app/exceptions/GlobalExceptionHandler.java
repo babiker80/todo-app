@@ -23,6 +23,15 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(err);
     }
 
+    @ExceptionHandler(TodoUpdateException.class)
+    public ResponseEntity<TodoErrorResponse> handleUpdate(TodoUpdateException ex) {
+        TodoErrorResponse err = TodoErrorResponse.builder()
+                .details("Requested Todo not found")
+                .uri("/todo/" + ex.getId())
+                .time(OffsetDateTime.now())
+                .build();
+        return ResponseEntity.status(HttpStatus.NOT_FOUND.value()).body(err);
+    }
 
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)

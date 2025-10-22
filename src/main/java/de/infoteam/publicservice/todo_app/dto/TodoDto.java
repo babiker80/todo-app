@@ -1,6 +1,6 @@
 package de.infoteam.publicservice.todo_app.dto;
 
-import de.infoteam.publicservice.todo_app.entity.Todo;
+import de.infoteam.publicservice.todo_app.model.Todo;
 import de.infoteam.publicservice.todo_app.model.TodoStatus;
 import lombok.Builder;
 import lombok.Data;
