@@ -14,6 +14,7 @@ import java.util.UUID;
 
 @AllArgsConstructor
 @RestController
+@CrossOrigin(origins = "http://localhost:4200", allowedHeaders = "*")
 @RequestMapping("/todo")
 @Tag(name = "TodoController", description = "Operations for Todo resources")
 public class TodoController {

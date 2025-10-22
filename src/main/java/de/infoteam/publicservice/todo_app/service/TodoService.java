@@ -9,37 +9,27 @@ import de.infoteam.publicservice.todo_app.exceptions.TodoUpdateException;
 import de.infoteam.publicservice.todo_app.model.Todo;
 import de.infoteam.publicservice.todo_app.repository.TodoMapper;
 import de.infoteam.publicservice.todo_app.repository.TodoRepository;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
 import java.util.UUID;
 
+@Log4j2
 @Service
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class TodoService {
 
     private final TodoRepository repository;
     private final TodoMapper mapper;
 
+    @Transactional
     public TodoDto create(CreateTodoCommandImpl command) {
-        Todo todo = mapper.createEntity( command);
-        Todo saved = null;
-        try {
-            saved = repository.save(todo);
-        } catch (IllegalArgumentException es) {
-            throw new TodoUpdateException("IllegalArgument while saving todo");
-        }
-        catch (OptimisticLockingFailureException ex) {
-            throw new TodoUpdateException("OptimisticLockingFailure while saving todo");
-        }
-        catch (Exception  ex) {
-            throw new TodoUpdateException("Error while saving todo");
-        }
-
-        return mapper.toDto(saved);
+        return executeSave(mapper.createEntity(command), "creating todo");
     }
 
     public List<TodoDto> findAll() {
@@ -53,26 +43,15 @@ public class TodoService {
         return mapper.toDto(repository.findById(id).orElseThrow(() -> new TodoNotFoundException(id)));
     }
 
+    @Transactional
     public TodoDto update(UUID todoId, UpdateTodoCommandImpl command) {
         Todo todo = repository.findById(todoId).orElseThrow(() -> new TodoNotFoundException(todoId));
         mapper.updateEntity(todo, command);
 
-        Todo saved = null;
-        try {
-            saved = repository.save(todo);
-        } catch (IllegalArgumentException es) {
-            throw new TodoUpdateException("IllegalArgument while updating todo with id: ",todoId);
-        }
-        catch (OptimisticLockingFailureException ex) {
-            throw new TodoUpdateException("OptimisticLockingFailure while updating todo with id: ",todoId);
-        }
-        catch (Exception  ex) {
-            throw new TodoUpdateException("Error while updating todo with id: ",todoId);
-        }
-
-        return mapper.toDto(saved);
+        return executeSave(todo, "updating todo with id: "+todoId);
     }
 
+    @Transactional
     public TodoDto patch(UUID todoId, PatchTodoCommandImpl command) {
         Todo todo = repository.findById(todoId).orElseThrow(() -> new TodoNotFoundException(todoId));
         if (command.getStatus() == null) {
@@ -82,13 +61,15 @@ public class TodoService {
         todo.setStatus(command.getStatus());
         todo.setLastModified(OffsetDateTime.now());
 
-        return mapper.toDto(repository.save(todo));
+        return executeSave(todo, "patching todo with id: "+todoId);
     }
 
+    @Transactional
     public TodoDto delete(UUID todoId) {
         Todo todo = repository.findById(todoId).orElseThrow(() -> new TodoNotFoundException(todoId));
         try {
             repository.deleteById(todoId);
+            log.info("Successfully deleting todo with id: "+todoId);
         } catch (IllegalArgumentException es) {
             throw new TodoUpdateException("IllegalArgument while deleting todo with id: ",todoId);
         }
@@ -107,12 +88,16 @@ public class TodoService {
     private TodoDto executeSave(Todo todo, String actionDescription) {
         try {
             Todo saved = repository.save(todo);
+            log.info("Successfully {}", actionDescription);
             return mapper.toDto(saved);
         } catch (IllegalArgumentException e) {
+            log.error("IllegalArgumentError {}", actionDescription, e);
             throw new TodoUpdateException("IllegalArgument while " + actionDescription);
         } catch (OptimisticLockingFailureException e) {
+            log.error("OptimisticLockingFailure {}", actionDescription, e);
             throw new TodoUpdateException("OptimisticLockingFailure while " + actionDescription);
         } catch (Exception e) {
+            log.error("Error {}", actionDescription, e);
             throw new TodoUpdateException("Error while " + actionDescription);
         }
     }

@@ -41,11 +41,6 @@ public class TodoMapper {
     public Todo updateEntity(Todo todo, UpdateTodoCommandImpl command) {
         if (todo == null || command == null) return todo;
 
-//        todos.setName(command.getName());
-//        todos.setDetails(command.getDetails());
-//        todos.setDueDate(command.getDueDate());
-//        todos.setStatus(command.getStatus());
-
         Optional.ofNullable(command.getName()).ifPresent(todo::setName);
         Optional.ofNullable(command.getDetails()).ifPresent(todo::setDetails);
         Optional.ofNullable(command.getDueDate()).ifPresent(todo::setDueDate);
